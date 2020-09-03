@@ -2,6 +2,8 @@ module SortedList (
   SortedList,
   Sorted,
   Unsorted,
+  Empty,
+  NonEmpty,
   empty,
   singleton,
   cons,
@@ -11,22 +13,25 @@ module SortedList (
 
 import Data.List(sort)
 
-newtype SortedList s a = SortedList [a]
+newtype SortedList s e a = SortedList [a]
 
 data Sorted
 data Unsorted
 
-empty :: SortedList s a
+data Empty
+data NonEmpty
+
+empty :: SortedList s Empty a
 empty = SortedList []
 
-singleton :: a -> SortedList s a
+singleton :: a -> SortedList s NonEmpty a
 singleton x = SortedList [x]
 
-cons :: a -> SortedList s a -> SortedList Unsorted a
+cons :: a -> SortedList s e a -> SortedList Unsorted NonEmpty a
 cons x (SortedList xs) = SortedList $ x:xs
 
-sortL :: Ord a => SortedList s a -> SortedList Sorted a
+sortL :: Ord a => SortedList s e a -> SortedList Sorted e a
 sortL (SortedList xs) = SortedList $ sort xs
 
-extract :: SortedList Sorted a -> [a]
+extract :: SortedList Sorted e a -> [a]
 extract (SortedList xs) = xs

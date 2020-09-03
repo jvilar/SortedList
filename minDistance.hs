@@ -1,12 +1,15 @@
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE ViewPatterns #-}
 
 import SortedList
 
-minDistance :: SortedList Sorted Int -> Int
+minDistance :: SortedList Sorted NonEmpty Int -> Int
 minDistance (extract -> l) = minimum $ zipWith (-) (tail l) l
 
-readData :: String -> SortedList Sorted Int
-readData = sortL . foldr cons empty . map read . words
+readData :: String -> SortedList Sorted NonEmpty Int
+readData = (\case
+              [] -> error "Empty input"
+              (x:xs) -> sortL . foldr cons (singleton $ read x) $ map read xs) . words
 
 main :: IO ()
 main = interact $ show . minDistance . readData
